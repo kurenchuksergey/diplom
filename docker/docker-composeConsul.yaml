@@ -10,36 +10,38 @@ volumes:
 
 services:
   main:
-    image: kurenchuksergey/diplomservice:latest
-  depends_on:
-  - client
-  - postgres
-  deploy:
-    placement:
-      constraints: [node.label == worker]
+    image: kurenchuksergey/diplomservice
+    depends_on:
+    - client
+    - postgres
+    ports:
+      - "8100:8100"
+    deploy:
+      placement:
+        constraints: [node.label == worker]
 
   client:
     <<: *consul
     command: "agent -retry-join server-bootstrap -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}'"
     depends_on:
-    - server-bootstrap
+    -  server-bootstrap
     deploy:
       replicas: 2
     networks:
-    - default_net
+      - default_net
     ports:
-    - "8090:8090"
+      - "8090:8090"
 
 
   server:
     <<: *consul
     ports:
-    - "8500:8500"
+      - "8500:8500"
     depends_on:
-    - server-bootstrap
+      - server-bootstrap
     command: "agent -server -retry-join server-bootstrap -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}' -ui"
     deploy:
-      replicas: 2
+      replicas: 1
       placement:
         constraints: [node.role == manager]
 
@@ -58,7 +60,7 @@ services:
       - "8080:8080"
     stop_grace_period: 1m30s
     volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -67,17 +69,17 @@ services:
     image: postgres:11.1
     hostname: localhost
     networks:
-    - default_net
+      - default_net
     ports:
-    - "5432:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: diplom
       POSTGRES_PASSWORD: diplom
       POSTGRES_DB: diplomDb
       PGDATA: /var/lib/postgresql/data/pgdata/diplom
-    command: curl -s -XPUT -d "{\"Name\": \"postgres\",\"ID\": \"postgres\",\"Tags\": [ \"postgres\" ],\"Address\": \"localhost\", \"Port\": 5432, \"Check\": { \"Name\": \"PostgreSQL TCP on port 5432\", \"ID\": \"postgres\", \"Interval\": \"10s\", \"TCP\": \"postgres:5432\",\"Timeout\": \"1s\",\"Status\": \"passing\"}}" localhost:8500/v1/agent/service/register
-    depends_on:
-      - client
+    command: "curl -s -XPUT -d \"{\"Name\": \"postgres\",\"ID\": \"postgres\",\"Tags\": [ \"postgres\" ],\"Address\": \"localhost\", \"Port\": 5432, \"Check\": { \"Name\": \"PostgreSQL TCP on port 5432\", \"ID\": \"postgres\", \"Interval\": \"10s\", \"TCP\": \"postgres:5432\",\"Timeout\": \"1s\",\"Status\": \"passing\"}}\" localhost:8500/v1/agent/service/register"
+#    depends_on:
+#      - client
     deploy:
       placement:
         constraints: [node.label == worker]
