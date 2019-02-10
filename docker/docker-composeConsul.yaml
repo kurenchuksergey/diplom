@@ -10,7 +10,7 @@ volumes:
 
 services:
   main:
-    image: kurenchuksergey/diplomservice
+    image: kurenchuksergey/diplomservice:0.1
     depends_on:
     - client
     - postgres
@@ -18,7 +18,7 @@ services:
       - "8100:8100"
     deploy:
       placement:
-        constraints: [node.label == worker]
+        constraints: [node.role == worker]
 
   client:
     <<: *consul
@@ -27,6 +27,8 @@ services:
     -  server-bootstrap
     deploy:
       replicas: 2
+      placement:
+              constraints: [node.role == worker]
     networks:
       - default_net
     ports:
@@ -77,11 +79,14 @@ services:
       POSTGRES_PASSWORD: diplom
       POSTGRES_DB: diplomDb
       PGDATA: /var/lib/postgresql/data/pgdata/diplom
-    command: "curl -s -XPUT -d \"{\"Name\": \"postgres\",\"ID\": \"postgres\",\"Tags\": [ \"postgres\" ],\"Address\": \"localhost\", \"Port\": 5432, \"Check\": { \"Name\": \"PostgreSQL TCP on port 5432\", \"ID\": \"postgres\", \"Interval\": \"10s\", \"TCP\": \"postgres:5432\",\"Timeout\": \"1s\",\"Status\": \"passing\"}}\" localhost:8500/v1/agent/service/register"
+#    command: "curl -s -XPUT -d \"{\"Name\": \"postgres\",\"ID\": \"postgres\",\"Tags\": [ \"postgres\" ],\"Address\": \"localhost\", \"Port\": 5432, \"Check\": { \"Name\": \"PostgreSQL TCP on port 5432\", \"ID\": \"postgres\", \"Interval\": \"10s\", \"TCP\": \"postgres:5432\",\"Timeout\": \"1s\",\"Status\": \"passing\"}}\" localhost:8500/v1/agent/service/register"
 #    depends_on:
 #      - client
     deploy:
+      replicas: 1
       placement:
-        constraints: [node.label == worker]
+        constraints: [node.role == worker]
+#      restart_policy:
+#              condition: on-failure
 networks:
   default_net:
