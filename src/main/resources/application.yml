@@ -1,0 +1,37 @@
+diplom:
+  db:
+    name: 'diplomDb'
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 20000
+        readTimeout: 20000
+        loggerLevel: basic
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web.exposure:
+      include: '*'
+spring:
+  application:
+    name: diplom
+
+  cloud:
+    consul:
+      discovery:
+        host: localhost
+        healthCheckPath: /health
+        healthCheckInterval: 15s
+        instanceId: ${spring.application.name}:${random.value}
+#    config:
+#      enabled: true
+#      watch:
+#        enabled: true
+
+server:
+  port: 8090

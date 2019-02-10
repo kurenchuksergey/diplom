@@ -1,0 +1,39 @@
+version: '3.3'
+networks:
+  lan:
+services:
+  consul:
+    image: consul:1.1.0
+    hostname: localhost
+    networks:
+    - lan
+    ports:
+    - 8500:8500
+  postgres:
+    container_name: diplomPostgress
+    image: postgres:11.1
+    restart: always
+    hostname: localhost
+    networks:
+    - lan
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_USER: diplom
+      POSTGRES_PASSWORD: diplom
+      POSTGRES_DB: diplomDb
+      PGDATA: /var/lib/postgresql/data/pgdata/diplom
+    command: curl -s -XPUT -d "{\"Name\": \"postgres\",\"ID\": \"postgres\",\"Tags\": [ \"postgres\" ],\"Address\": \"localhost\", \"Port\": 5432, \"Check\": { \"Name\": \"PostgreSQL TCP on port 5432\", \"ID\": \"postgres\", \"Interval\": \"10s\", \"TCP\": \"postgres:5432\",\"Timeout\": \"1s\",\"Status\": \"passing\"}}" localhost:8500/v1/agent/service/register
+
+
+  # user: pgadmin4@pgadmin.org
+  # pass: admin
+  #pgadmin:
+  #  container_name: diplomPgAdmin
+  #  links:
+#    - postgres:postgres
+#    image: fenglc/pgadmin4
+#    volumes:
+#    - pgadmin_data:/root/.pgadmin
+#    ports:
+#    - "5050:5050"
