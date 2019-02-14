@@ -7,9 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthCheck {
 
-//    @GetMapping("health")
+    @GetMapping("health")
     public HttpStatus checkHealth(){
         System.out.println("check");
         return HttpStatus.ACCEPTED;
+    }
+
+    @GetMapping()
+    public String getHelloWorld(){
+        return "Hello World";
     }
 }
