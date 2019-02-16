@@ -2,6 +2,7 @@ package com.kurenchuksergey.diplom.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-@Configuration
+//@Configuration
 public class PersistenceConfiguration {
     @Value("${diplom.db.name}")
     private String databaseName;
@@ -26,18 +27,23 @@ public class PersistenceConfiguration {
     private DiscoveryClient discoveryClient;
 
     @Bean
-    @Primary
-    public DataSource dataSource() {
-         ServiceInstance postgresInstance = getPostgresInstance();
-
-        return DataSourceBuilder
-                .create()
-                .username("diplom")
-                .password("diplom")
-                .url(format("jdbc:postgresql://%s:%s/%s", postgresInstance.getHost(), postgresInstance.getPort(), databaseName))
-                .driverClassName("org.postgresql.Driver")
-                .build();
+    public CommandLineRunner lineRunner(){
+        return args -> discoveryClient.getServices().stream().forEach(System.out::println);
     }
+
+//    @Bean
+//    @Primary
+//    public DataSource dataSource() {
+//         ServiceInstance postgresInstance = getPostgresInstance();
+//
+//        return DataSourceBuilder
+//                .create()
+//                .username("diplom")
+//                .password("diplom")
+//                .url(format("jdbc:postgresql://%s:%s/%s", postgresInstance.getHost(), postgresInstance.getPort(), databaseName))
+//                .driverClassName("org.postgresql.Driver")
+//                .build();
+//    }
 
     private ServiceInstance getPostgresInstance() {
         List<String> services = discoveryClient.getServices();
