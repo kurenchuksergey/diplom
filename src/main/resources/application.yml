@@ -24,7 +24,6 @@ spring:
   cloud:
     consul:
       discovery:
-        host: localhost
         healthCheckPath: /health
         healthCheckInterval: 15s
         instanceId: ${spring.application.name}:${random.value}
