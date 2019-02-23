@@ -20,7 +20,7 @@ services:
       placement:
         constraints: [node.role == worker]
 
-  client:
+  client-consul:
     <<: *consul
     command: "agent -retry-join server-bootstrap -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}'"
     depends_on:
@@ -69,6 +69,20 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+  rabbitmq:
+    image: rajeevshukla/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - "AUTOCLUSTER_TYPE=consul"
+      - "CONSUL_HOST=client-consul"
+      - "CONSUL_PORT=8500"
+      - "CONSUL_SVC=rabbitmq"
+      - "CONSUL_SVC_ADDR_AUTO=true"
+      - "AUTOCLUSTER_CLEANUP=true"
+      - "CLEANUP_WARN_ONLY=false"
+      - "RABBITMQ_ERLANG_COOKIE=secrect"
 
   postgres:
     image: postgres:11.1
