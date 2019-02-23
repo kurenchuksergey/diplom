@@ -10,7 +10,7 @@ volumes:
 
 services:
   main:
-    image: kurenchuksergey/diplomservice:0.1
+    image: kurenchuksergey/diplomservice
     depends_on:
     - client
     - postgres
@@ -29,21 +29,24 @@ services:
       replicas: 2
       placement:
               constraints: [node.role == worker]
-    networks:
-      - default_net
-    ports:
-      - "8090:8090"
-
+#    networks:
+#      - default_net
 
   server:
     <<: *consul
     ports:
       - "8500:8500"
+      - "8300:8300"
+      - "8400:8400"
+      - "8301:8301/tcp"
+      - "8302:8302/tcp"
+      - "8301:8301/udp"
+      - "8302:8302/udp"
     depends_on:
       - server-bootstrap
     command: "agent -server -retry-join server-bootstrap -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}' -ui"
     deploy:
-      replicas: 1
+      replicas: 2
       placement:
         constraints: [node.role == manager]
 
