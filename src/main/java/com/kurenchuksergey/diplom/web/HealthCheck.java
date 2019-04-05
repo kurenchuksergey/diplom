@@ -1,4 +1,4 @@
-package com.kurenchuksergey.diplom;
+package com.kurenchuksergey.diplom.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +11,5 @@ public class HealthCheck {
     public HttpStatus checkHealth(){
         System.out.println("check");
         return HttpStatus.ACCEPTED;
-    }
-
-    @GetMapping()
-    public String getHelloWorld(){
-        return "Hello World";
     }
 }

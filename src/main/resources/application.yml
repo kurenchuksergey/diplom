@@ -1,6 +1,8 @@
-diplom:
+myapp:
   db:
     name: 'diplomDb'
+    host: 'postgres'
+    port: '5432'
 
 feign:
   client:
@@ -19,14 +21,35 @@ management:
       include: '*'
 spring:
   application:
-    name: diplom
-
+    name: ${spring.profiles.active}
+  servlet:
+      multipart:
+        max-file-size : 128MB
+        max-request-size: 128MB
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
   cloud:
     consul:
       discovery:
         healthCheckPath: /health
         healthCheckInterval: 15s
-        instanceId: ${spring.application.name}:${random.value}
+        instanceId: ${spring.application.name}:${server.port}
+        service-name: ${spring.application.name}
+
+security:
+  oauth2:
+    client:
+#      clientId: 135280721237-ii76ivt2lormii6et1rch2vu3te67juc.apps.googleusercontent.com
+#      clientSecret: 0d5DDXt5uXr6Q3pkiSIG998n
+      accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+      clientAuthenticationScheme: form
+      scope: openid,email,profile
+    resource:
+      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+      preferTokenInfo: true
+
 #    config:
 #      enabled: true
 #      watch:

@@ -12,4 +12,8 @@ RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 FROM java:8
 VOLUME /tmp
 COPY --from=build /workspace/app/target/Diplom.jar /
-ENTRYPOINT ["java","-jar","/Diplom.jar"]
+ENV port=8090
+ENV profile=manager
+
+
+ENTRYPOINT ["java","-jar","/Diplom.jar -Dserver.port=$port -Dspring.profiles.active=$profile -Dsecurity.oauth2.client.clientId=$oauth_client_id -Dsecurity.oauth2.client.clientSecret=$oauth_client_secret"]

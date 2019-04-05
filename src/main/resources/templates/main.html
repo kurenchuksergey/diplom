@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!--<link rel="stylesheet" type="text/css" media="all"-->
+    <!--href="../../css/gtvg.css" th:href="@{/css/gtvg.css}"/>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <style>
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        body {
+            padding-top: 5rem;
+        }
+
+        .starter-template {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+    </style>
+    <!-- Custom styles for this template -->
+
+</head>
+<body>
+<div class="container" th:if="${user} != null">
+    <div class="row justify-content-center">
+        <div class="col-sm-5"><img th:src="${user.getUserPic()}" width="100%"></div>
+    </div>
+    <div class="row justify-content-center pt-2">
+        <div class="col-5"><a href="/logout" class="btn btn-lg btn-outline-danger  btn-block">Выход</a></div>
+    </div>
+    <div class="row justify-content-center pt-2">
+        <div class="col-5"><a href="/view" class="btn btn-primary btn-lg  btn-block">Фото</a></div>
+    </div>
+    <div class="row justify-content-center pt-2">
+        <div class="col-5"><a href="/upload/picture" class="btn btn-primary btn-lg  btn-block">Загрузить</a></div>
+    </div>
+</div>
+<div class="container" th:unless="${user} != null">
+    <div class="row justify-content-center">
+        <div class="col-8"><h2>Вам необходимо авторизоваться на сайте</h2></div>
+    </div>
+    <div class="row justify-content-center pt-2">
+        <div class="col-8"><a href="/login" class="btn btn-danger btn-lg  btn-block">Войти</a></div>
+    </div>
+</div>
+
+
+</main>
+
+</body>
+</html>

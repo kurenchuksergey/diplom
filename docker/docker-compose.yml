@@ -23,8 +23,15 @@ services:
       POSTGRES_PASSWORD: diplom
       POSTGRES_DB: diplomDb
       PGDATA: /var/lib/postgresql/data/pgdata/diplom
-    command: curl -s -XPUT -d "{\"Name\": \"postgres\",\"ID\": \"postgres\",\"Tags\": [ \"postgres\" ],\"Address\": \"localhost\", \"Port\": 5432, \"Check\": { \"Name\": \"PostgreSQL TCP on port 5432\", \"ID\": \"postgres\", \"Interval\": \"10s\", \"TCP\": \"postgres:5432\",\"Timeout\": \"1s\",\"Status\": \"passing\"}}" localhost:8500/v1/agent/service/register
-
+#    command: curl -s -XPUT -d "{\"Name\": \"postgres\",\"ID\": \"postgres\",\"Tags\": [ \"postgres\" ],\"Address\": \"localhost\", \"Port\": 5432, \"Check\": { \"Name\": \"PostgreSQL TCP on port 5432\", \"ID\": \"postgres\", \"Interval\": \"10s\", \"TCP\": \"postgres:5432\",\"Timeout\": \"1s\",\"Status\": \"passing\"}}"" localhost:8500/v1/agent/service/register
+    #user: guest
+    #password: guest
+  rabbitmq:
+     image: rabbitmq:3.7.3-management
+     container_name: diplomRabbitMq
+     ports:
+     - "5672:5672"
+     - "15672:15672"
 
   # user: pgadmin4@pgadmin.org
   # pass: admin

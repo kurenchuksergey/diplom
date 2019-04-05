@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+
+    <!-- Custom styles for this template -->
+    <script>
+        $(document).ready(function () {
+
+            $("#btnSubmit").click(function (event) {
+
+                //stop submit the form, we will post it manually.
+                event.preventDefault();
+
+                // Get form
+                var form = $('#fileUploadForm')[0];
+
+                // Create an FormData object
+                var data = new FormData(form);
+                console.log(data.has("file"))
+                // If you want to add an extra field for the FormData
+                //data.append("CustomField", "This is some extra data, testing");
+
+                // disabled the submit button
+                $("#btnSubmit").prop("disabled", true);
+
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: "task",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function (data) {
+
+                        $("#resultId").text(data);
+                        console.log("SUCCESS : ", data);
+                        $("#btnSubmit").prop("disabled", false);
+                        setTimeout(
+                            function()
+                            {
+                                location.reload();
+                            }, 0001);
+                    },
+                    error: function (e) {
+
+                        $("#resultId").text(e.responseText);
+                        console.log("ERROR : ", e);
+                        $("#btnSubmit").prop("disabled", false);
+
+                    }
+                });
+
+            });
+
+        });
+    </script>
+
+</head>
+
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="/">
+        <img th:src="${user.getUserPic()}" th:text="${user.getName()}" width="30" height="30" style="margin-right: 5px"
+             class="d-inline-block align-top" alt="">
+    </a>
+</nav>
+<div class="container mt-5">
+    <div class="row justify-content-center"><h3>Загрузите ваше изображение</h3></div>
+    <div class="row justify-content-around">
+        <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
+            <div class="form-check-inline">
+                <label for="file" id="resultId"></label>
+                <input type="file" class="form-control-file" name="file" id="file">
+                <input class="btn btn-primary" type="button" value="Submit" id="btnSubmit">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row" >
+        <div class="col-sm-4" th:each="task : ${user.getTasks()}">
+            <div class="card mt-3">
+                <a th:href="@{'/'+${task.getId()}+'/image'}"> <img class="card-img-top" th:src="@{'/'+${task.getId()}+'/image/prev'}"
+                      alt="Card image cap"></a>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${task.getCreateOn()}">Create On</h5>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted" th:text="${task.getImageContentType()}">Content Type</small>
+                    <img th:src="@{/static/img/del.png}" width="32" height="32">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <ul>
+    </ul>
+</div>
+
+</body>
+</html>
