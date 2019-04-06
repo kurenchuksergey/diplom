@@ -18,4 +18,4 @@ ENV oauth_client_id=""
 ENV oauth_client_secret=""
 
 
-ENTRYPOINT ["java","-jar","/Diplom.jar -Dserver.port=$port -Dspring.profiles.active=$profile -Dsecurity.oauth2.client.clientId=$oauth_client_id -Dsecurity.oauth2.client.clientSecret=$oauth_client_secret"]
+ENTRYPOINT ["java","-jar","./Diplom.jar -Dserver.port=$port -Dspring.profiles.active=$profile -Dsecurity.oauth2.client.clientId=$oauth_client_id -Dsecurity.oauth2.client.clientSecret=$oauth_client_secret"]
