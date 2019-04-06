@@ -1,7 +1,7 @@
 myapp:
   db:
     name: 'diplomDb'
-    host: 'localhost'
+    host: 'postgres'
     port: '5432'
 
 feign:
