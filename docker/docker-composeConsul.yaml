@@ -19,6 +19,7 @@ services:
     environment:
       - oauth_client_id=client_id
       - oauth_client_secret=client_secter
+      - port=8100
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -29,7 +30,6 @@ services:
       - client
       - postgres
       - manager
-    ports:
     environment:
       - profile=worker
     deploy:
