@@ -23,7 +23,7 @@ services:
       - oauth_client_id=client_id
       - oauth_client_secret=client_secter
       - port=8100
-      - db_host='postgres'
+      - db_host=postgres
       - db_port=5432
     deploy:
       placement:
@@ -118,7 +118,6 @@ services:
   postgres:
     image: postgres:11.1
     restart: always
-    hostname: localhost
     networks:
       - default_net
     ports:
