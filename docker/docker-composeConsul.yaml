@@ -10,9 +10,12 @@ volumes:
 
 services:
   manager:
+    networks:
+    - default_net
     image: kurenchuksergey/diplomservice
     depends_on:
-    - client
+    - rabbitmq
+    - client-consul
     - postgres
     ports:
       - "8100:8100"
@@ -20,14 +23,19 @@ services:
       - oauth_client_id=client_id
       - oauth_client_secret=client_secter
       - port=8100
+      - db_host='postgres'
+      - db_port=5432
     deploy:
       placement:
         constraints: [node.role == manager]
 
   worker:
+    networks:
+    - default_net
     image: kurenchuksergey/diplomservice
     depends_on:
-      - client
+      - rabbitmq
+      - client-consul
       - postgres
       - manager
     environment:
@@ -50,6 +58,8 @@ services:
 #      - default_net
 
   server:
+    networks:
+    - default_net
     <<: *consul
     ports:
       - "8500:8500"
@@ -68,6 +78,8 @@ services:
         constraints: [node.role == manager]
 
   server-bootstrap:
+    networks:
+    - default_net
     image: consul
     command: "agent -server -bootstrap-expect 3 -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}'"
     deploy:
@@ -87,6 +99,8 @@ services:
       placement:
         constraints: [node.role == manager]
   rabbitmq:
+    networks:
+    - default_net
     image: rajeevshukla/rabbitmq
     ports:
       - "5672:5672"
@@ -103,6 +117,7 @@ services:
 
   postgres:
     image: postgres:11.1
+    restart: always
     hostname: localhost
     networks:
       - default_net

@@ -1,8 +1,10 @@
-myapp:
+app:
   db:
     name: 'diplomDb'
     host: 'postgres'
     port: '5432'
+    user: 'diplom'
+    pass: 'diplom'
 
 feign:
   client:
