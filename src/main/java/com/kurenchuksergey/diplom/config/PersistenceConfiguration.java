@@ -19,14 +19,21 @@ import static java.lang.String.format;
 @Profile("manager")
 @EnableTransactionManagement
 public class PersistenceConfiguration {
-    @Value("${myapp.db.name}")
+    @Value("${app.db.name}")
     private String databaseName;
 
-    @Value("${myapp.db.host}")
+    @Value("${app.db.host}")
     private String databaseHost;
 
-    @Value("${myapp.db.port}")
+    @Value("${app.db.port}")
     private String databasePort;
+
+    @Value("${app.db.user}")
+    private String user;
+
+    @Value("${app.db.pass}")
+    private String password;
+
 
 
     @Bean
@@ -35,8 +42,8 @@ public class PersistenceConfiguration {
 
         return DataSourceBuilder
                 .create()
-                .username("diplom")
-                .password("diplom")
+                .username(user)
+                .password(password)
                 .url(format("jdbc:postgresql://%s:%s/%s", databaseHost, databasePort, databaseName))
                 .driverClassName("org.postgresql.Driver")
                 .build();
