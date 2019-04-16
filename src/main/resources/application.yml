@@ -1,10 +1,16 @@
 app:
   db:
     name: 'diplomDb'
-    host: 'postgres'
+    host: 'localhost'
     port: '5432'
     user: 'diplom'
     pass: 'diplom'
+
+rabbit:
+   user: 'guest'
+   pass: 'guest'
+   service:
+     id: 'rabbitmq'
 
 feign:
   client:
