@@ -1,7 +1,10 @@
 package com.kurenchuksergey.diplom.config;
 
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
@@ -36,5 +39,15 @@ public class RabbitConfiguration {
         connectionFactory.setUsername(username);
         connectionFactory.setPassword(password);
         return (ConnectionFactory) connectionFactory;
+    }
+
+    @Bean
+    public AmqpAdmin amqpAdmin() {
+        return new RabbitAdmin(rabbitConnectionFactory());
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate() {
+        return new RabbitTemplate(rabbitConnectionFactory());
     }
 }
