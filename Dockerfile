@@ -25,5 +25,4 @@ ENV rabbit_user "guest"
 ENV rabbit_pass "guest"
 ENV rabbit_service_id "rabbitmq"
 
-CMD  ["java","-jar","./Diplom.jar", "--server.port=${port}","--spring.profiles.active=${profile}","--security.oauth2.client.clientId=${oauth_client_id}", "--security.oauth2.client.clientSecret=${oauth_client_secret}",
-"--app.db.host=${db_host}","--app.db.name=${db_name}","--app.db.user=${db_user}","--app.db.pass=${db_pass}","--app.db.port=${db_port}", "--rabbit.user=${rabbit_user}","--rabbit.pass=${rabbit_pass}","--rabbit.service.id=${rabbit_service_id}"]
+CMD  ["java","-jar","./Diplom.jar", "--server.port=${port}","--spring.profiles.active=${profile}","--security.oauth2.client.clientId=${oauth_client_id}", "--security.oauth2.client.clientSecret=${oauth_client_secret}","--app.db.host=${db_host}","--app.db.name=${db_name}","--app.db.user=${db_user}","--app.db.pass=${db_pass}","--app.db.port=${db_port}", "--rabbit.user=${rabbit_user}","--rabbit.pass=${rabbit_pass}","--rabbit.service.id=${rabbit_service_id}"]
