@@ -38,7 +38,7 @@ public class RabbitConfiguration {
         ServiceInstance serviceInstance = instances.get(0);
         String host = serviceInstance.getHost();
         int port = serviceInstance.getPort();
-
+        System.out.println("rabbit" + host + port);
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory(host, port);
         connectionFactory.setUsername(username);
         connectionFactory.setPassword(password);
@@ -61,12 +61,12 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    DirectExchange directExchange(){
+    DirectExchange directExchange() {
         return new DirectExchange(taskExchange);
     }
 
     @Bean
-    Binding bind(Queue queue, DirectExchange directExchange){
+    Binding bind(Queue queue, DirectExchange directExchange) {
         return BindingBuilder.bind(queue).to(directExchange).withQueueName();
     }
 }
