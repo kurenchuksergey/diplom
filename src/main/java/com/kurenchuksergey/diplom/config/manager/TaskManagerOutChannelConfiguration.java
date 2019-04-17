@@ -19,20 +19,7 @@ public class TaskManagerOutChannelConfiguration {
     public final String taskExchange = "taskExchange";
 
 
-    @Bean
-    Queue queue() {
-        return new Queue(Channel.TASK_TO_WORKER.toString(), false);
-    }
 
-    @Bean
-    DirectExchange directExchange(){
-        return new DirectExchange(taskExchange);
-    }
-
-    @Bean
-    Binding bind(Queue queue, DirectExchange directExchange){
-        return BindingBuilder.bind(queue).to(directExchange).withQueueName();
-    }
 
     @Bean
     public MessageChannel amqpTaskToWorkerChannel() {

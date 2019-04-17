@@ -1,6 +1,7 @@
 package com.kurenchuksergey.diplom.config;
 
-import org.springframework.amqp.core.AmqpAdmin;
+import com.kurenchuksergey.diplom.config.channel.Channel;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -27,6 +28,9 @@ public class RabbitConfiguration {
     @Autowired
     private DiscoveryClient discoveryClient;
 
+    public final String taskExchange = "taskExchange";
+
+
     @Bean
     @Primary
     public ConnectionFactory rabbitConnectionFactory() {
@@ -49,5 +53,20 @@ public class RabbitConfiguration {
     @Bean
     public RabbitTemplate rabbitTemplate() {
         return new RabbitTemplate(rabbitConnectionFactory());
+    }
+
+    @Bean
+    Queue queue() {
+        return new Queue(Channel.TASK_TO_WORKER.toString(), false);
+    }
+
+    @Bean
+    DirectExchange directExchange(){
+        return new DirectExchange(taskExchange);
+    }
+
+    @Bean
+    Binding bind(Queue queue, DirectExchange directExchange){
+        return BindingBuilder.bind(queue).to(directExchange).withQueueName();
     }
 }
