@@ -19,8 +19,6 @@ public class TaskManagerOutChannelConfiguration {
     public final String taskExchange = "taskExchange";
 
 
-
-
     @Bean
     public MessageChannel amqpTaskToWorkerChannel() {
         return new DirectChannel();

@@ -31,9 +31,6 @@ public class TaskWorkerInChannelConfiguration {
     @Autowired
     private ForeignWorkerClient foreignWorkerClient;
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
-
     @Bean
     public MessageChannel amqpTaskFromManagerChannel() {
         return new DirectChannel();
@@ -56,6 +53,7 @@ public class TaskWorkerInChannelConfiguration {
         container.setConcurrentConsumers(2);
         return container;
     }
+
 
     @Bean
     @ServiceActivator(inputChannel = "amqpTaskFromManagerChannel")
