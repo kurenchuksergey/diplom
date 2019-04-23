@@ -39,6 +39,7 @@ public class RabbitConfiguration {
     public ConnectionFactory rabbitConnectionFactory() {
         List<ServiceInstance> instances = discoveryClient.getInstances(serviceId);
         if(instances.isEmpty()){
+            System.out.println("exit because rabbit not started");
             context.close();
             return null;
         }
