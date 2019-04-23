@@ -20,7 +20,7 @@ services:
     - server
     ports:
      # - "8100:8100"
-      - "8100:80"
+      - "80:8100"
     environment:
       - rabbit_service_id=rabbitmq
       - oauth_client_id=135280721237-ii76ivt2lormii6et1rch2vu3te67juc.apps.googleusercontent.com
@@ -28,6 +28,7 @@ services:
       - port=8100
       - db_host=postgres
       - db_port=5432
+      - consul_host=server-bootstrap
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -44,22 +45,23 @@ services:
     environment:
       - rabbit_service_id=rabbitmq
       - profile=worker
+      - consul_host=server
     deploy:
-      replicas: 2
+      mode: global
       placement:
         constraints: [node.role == worker]
 
-  client-consul:
-    <<: *consul
-    command: "agent -retry-join server-bootstrap -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}'"
-    depends_on:
-    -  server-bootstrap
-    deploy:
-      replicas: 2
-      placement:
-              constraints: [node.role == worker]
-    networks:
-      - default_net
+#  client-consul:
+#    <<: *consul
+#    command: "agent -retry-join server-bootstrap -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}'"
+#    depends_on:
+#    -  server-bootstrap
+#    deploy:
+#      replicas: 2
+#      placement:
+#              constraints: [node.role == worker]
+#    networks:
+#      - default_net
 
   server:
     networks:
@@ -77,15 +79,15 @@ services:
       - server-bootstrap
     command: "agent -server -retry-join server-bootstrap -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}' -ui"
     deploy:
-      replicas: 2
+      mode: global
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
 
   server-bootstrap:
     networks:
     - default_net
     image: consul
-    command: "agent -server -bootstrap-expect 3 -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}'"
+    command: "agent -server -bootstrap-expect 2 -client 0.0.0.0 -bind '{{ GetInterfaceIP \"eth0\" }}'"
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -111,7 +113,7 @@ services:
       - "15672:15672"
     environment:
       - "AUTOCLUSTER_TYPE=consul"
-      - "CONSUL_HOST=client-consul"
+      - "CONSUL_HOST=server"
       - "CONSUL_PORT=8500"
       - "CONSUL_SVC=rabbitmq"
       - "CONSUL_SVC_ADDR_AUTO=true"
