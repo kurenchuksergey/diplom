@@ -17,11 +17,14 @@ services:
     - rabbitmq
     - client-consul
     - postgres
+    - server
     ports:
-      - "8100:8100"
+     # - "8100:8100"
+      - "8100:80"
     environment:
-      - oauth_client_id=client_id
-      - oauth_client_secret=client_secter
+      - rabbit_service_id=rabbitmq
+      - oauth_client_id=135280721237-ii76ivt2lormii6et1rch2vu3te67juc.apps.googleusercontent.com
+      - oauth_client_secret=0d5DDXt5uXr6Q3pkiSIG998n
       - port=8100
       - db_host=postgres
       - db_port=5432
@@ -39,6 +42,7 @@ services:
       - postgres
       - manager
     environment:
+      - rabbit_service_id=rabbitmq
       - profile=worker
     deploy:
       replicas: 2
