@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,6 +28,8 @@ public class RabbitConfiguration {
 
     @Autowired
     private DiscoveryClient discoveryClient;
+    @Autowired
+    private ConfigurableApplicationContext context;
 
     public final String taskExchange = "taskExchange";
 
@@ -35,6 +38,11 @@ public class RabbitConfiguration {
     @Primary
     public ConnectionFactory rabbitConnectionFactory() {
         List<ServiceInstance> instances = discoveryClient.getInstances(serviceId);
+        if(instances.isEmpty()){
+            System.out.println("exit because rabbit not started");
+            context.close();
+            return null;
+        }
         ServiceInstance serviceInstance = instances.get(0);
         String host = serviceInstance.getHost();
         int port = serviceInstance.getPort();
