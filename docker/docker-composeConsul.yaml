@@ -20,7 +20,7 @@ services:
     - server
     ports:
      # - "8100:8100"
-      - "8100:80"
+      - "80:8100"
     environment:
       - rabbit_service_id=rabbitmq
       - oauth_client_id=135280721237-ii76ivt2lormii6et1rch2vu3te67juc.apps.googleusercontent.com
