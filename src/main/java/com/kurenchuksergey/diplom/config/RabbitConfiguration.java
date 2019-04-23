@@ -43,6 +43,7 @@ public class RabbitConfiguration {
             context.close();
             return null;
         }
+        System.out.println("find"+instances.size());
         ServiceInstance serviceInstance = instances.get(0);
         String host = serviceInstance.getHost();
         int port = serviceInstance.getPort();
