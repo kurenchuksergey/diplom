@@ -40,9 +40,9 @@ spring:
   cloud:
     consul:
       discovery:
-        healthCheckPath: http://${spring.application.name}:${server.port}/health
+        healthCheckPath: /health
         healthCheckInterval: 15s
-        instanceId: ${spring.application.name}:${server.port}
+        instanceId: ${spring.application.name}:${random.int}
         service-name: ${spring.application.name}
 
 security:
