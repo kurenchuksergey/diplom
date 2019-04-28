@@ -2,6 +2,7 @@ package com.kurenchuksergey.diplom.web;
 
 import com.kurenchuksergey.diplom.config.manager.TaskManagerOutChannelConfiguration;
 import com.kurenchuksergey.diplom.entity.Task;
+import com.kurenchuksergey.diplom.entity.TaskType;
 import com.kurenchuksergey.diplom.repository.TaskRepository;
 import com.kurenchuksergey.diplom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 
-@RestController("task")
+@RestController
+@RequestMapping("task")
 @Profile("manager")
 public class TaskController {
     @Autowired
@@ -27,15 +29,17 @@ public class TaskController {
     @Autowired
     private TaskManagerOutChannelConfiguration.TaskGateway taskGateway;
 
-    @PostMapping
-    public HttpStatus createTask(@RequestParam(name = "file") MultipartFile file) throws IOException {
+    @PostMapping(value = "/{type}")
+    public HttpStatus createTask(@RequestParam(name = "file") MultipartFile file, @PathVariable(name = "type") String type) throws IOException {
         if (file == null || file.isEmpty()) {
             return HttpStatus.BAD_REQUEST;
         }
         Task task = new Task();
+        task.setFileName(file.getOriginalFilename());
         task.setImageContentType(file.getContentType());
         task.setImage(file.getBytes());
         task.setUserId(userService.getCurUser().getId());
+        task.setType(TaskType.valueOf(type));
         task = taskRepository.save(task);
         if (task.getId() == null) {
             return HttpStatus.BAD_GATEWAY;
@@ -43,8 +47,9 @@ public class TaskController {
         taskGateway.sendToRabbit(task);
         return HttpStatus.OK;
     }
+
     @DeleteMapping("{id}")
-    public void deleteTask(@PathVariable long id){
+    public void deleteTask(@PathVariable long id) {
         taskRepository.deleteById(id);
     }
 
@@ -54,8 +59,7 @@ public class TaskController {
     }
 
     /* TODO исключение и пермишины*/
-/* TODO исправить мапинг */
-    @PutMapping("task/{id}")
+    @PutMapping("{id}")
     public Task updateTask(@RequestBody Task task, @PathVariable Long id) {
         if (task == null || task.getImage() == null || task.getImage().length == 0) {
             throw new RuntimeException();

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Фотографий</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"></script>
+    <script>
+        function deleteTask(id) {
+
+            $.ajax({
+                type: "DELETE",
+                url: "task/" + id,
+                timeout: 600000,
+                success: function (data) {
+
+                    console.log("SUCCESS : ", data);
+                    location.reload();
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        };
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="/">
+        <img th:src="${user.getUserPic()}" th:text="${user.getName()}" width="30" height="30" style="margin-right: 5px"
+             class="d-inline-block align-top" alt="">
+    </a>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4" th:each="t : ${task}">
+            <div class="card mt-3">
+                <a th:href="@{'task/'+${t.getId()}+'/image'}"> <img class="card-img-top"
+                                                                th:src="@{'task/'+${t.getId()}+'/image/prev'}"
+                                                                alt="Card image cap"></a>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${t.getCreateOn()}">Create On</h5>
+
+                </div>
+                <p class="card-footer">
+                <p>Create On
+                    <small class="text-muted" th:text="${t.getCreateOn()}">Create On</small>
+                </p>
+                <p>FileName
+                    <small class="text-muted" th:text="${t.getFileName()}">FileName</small>
+                </p>
+                <p>Content-type
+                    <small class="text-muted" th:text="${t.getImageContentType()}">Content Type</small>
+                </p>
+                <div class="align-self-center"><a th:onclick="'deleteTask(\'' + ${t.getId()} + '\');'"> ✖ </a></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

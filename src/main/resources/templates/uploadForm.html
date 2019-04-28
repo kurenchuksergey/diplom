@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Good Thymes Virtual Grocery</title>
+    <title>Загрузка фотографий</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,12 +30,16 @@
                 //data.append("CustomField", "This is some extra data, testing");
 
                 // disabled the submit button
+
+
+                var typeSel = form[1].value;
+                console.log("test" + typeSel.toLocaleString())
                 $("#btnSubmit").prop("disabled", true);
 
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: "task",
+                    url: "/task/" + typeSel,
                     data: data,
                     processData: false,
                     contentType: false,
@@ -47,8 +51,7 @@
                         console.log("SUCCESS : ", data);
                         $("#btnSubmit").prop("disabled", false);
                         setTimeout(
-                            function()
-                            {
+                            function () {
                                 location.reload();
                             }, 0001);
                     },
@@ -79,28 +82,18 @@
     <div class="row justify-content-around">
         <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
             <div class="form-check-inline">
-                <label for="file" id="resultId"></label>
                 <input type="file" class="form-control-file" name="file" id="file">
+                <select id="typeSel">
+                    <option th:each="tp : ${type}" th:value="${tp.name()}" th:text="${tp.name()}"></option>
+                </select>
                 <input class="btn btn-primary" type="button" value="Submit" id="btnSubmit">
             </div>
         </form>
     </div>
 </div>
 <div class="container">
-    <div class="row" >
-        <div class="col-sm-4" th:each="task : ${user.getTasks()}">
-            <div class="card mt-3">
-                <a th:href="@{'/'+${task.getId()}+'/image'}"> <img class="card-img-top" th:src="@{'/'+${task.getId()}+'/image/prev'}"
-                      alt="Card image cap"></a>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${task.getCreateOn()}">Create On</h5>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted" th:text="${task.getImageContentType()}">Content Type</small>
-                    <img th:src="@{/static/img/del.png}" width="32" height="32">
-                </div>
-            </div>
-        </div>
+    <div class="row justify-content-center">
+        <h3  id="resultId"></h3>
     </div>
 </div>
 

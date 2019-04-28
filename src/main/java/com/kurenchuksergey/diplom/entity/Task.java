@@ -3,11 +3,14 @@ package com.kurenchuksergey.diplom.entity;
 import javax.persistence.*;
 
 @Entity
-//@Profile("manager")
 public class Task extends EntityParent {
 
     @Column
-    private String path;
+    private String fileName;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private TaskType type;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -23,16 +26,16 @@ public class Task extends EntityParent {
     private String imageContentType;
 
     @Transient
-    private final int widthPrev = 90;
+    private final int widthPrev = 240;
 
     @Transient
-    private final int heightPrev = 120;
+    private final int heightPrev = 240;
 
     @Column(name = "user_id")
     private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private UserIdent user;
 
     public byte[] getImage() {
@@ -51,13 +54,13 @@ public class Task extends EntityParent {
         this.state = state;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
+//    public String getPath() {
+//        return path;
+//    }
+//
+//    public void setPath(String path) {
+//        this.path = path;
+//    }
 
     public String getImageContentType() {
         return imageContentType;
@@ -99,12 +102,28 @@ public class Task extends EntityParent {
         this.user = user;
     }
 
+    public TaskType getType() {
+        return type;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public Task() {
     }
 
     @Override
     public String toString() {
-        return "id:" + super.getId() + " state" + state.toString() + " path";
+        return "id:" + super.getId() + " state" + state.toString() + " name" + fileName;
     }
 }
 

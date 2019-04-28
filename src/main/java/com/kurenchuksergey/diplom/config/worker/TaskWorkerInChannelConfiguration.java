@@ -9,7 +9,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -46,7 +45,7 @@ public class TaskWorkerInChannelConfiguration {
     }
 
     @Bean
-    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
+    public SimpleMessageListenerContainer container(@Qualifier("rabbitConnect") ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer container =
                 new SimpleMessageListenerContainer(connectionFactory);
         container.setQueueNames(Channel.TASK_TO_WORKER.toString());
@@ -62,11 +61,11 @@ public class TaskWorkerInChannelConfiguration {
 
             @Override
             protected Object handleRequestMessage(Message<?> requestMessage) {
-                Task task = (Task)requestMessage.getPayload();
+                Task task = (Task) requestMessage.getPayload();
                 byte[] image = task.getImage();
                 try {
                     BufferedImage bufferedImage = ImageService.fromByteArray(image, task.getImageContentType());
-                    BufferedImage filter = ImageService.filter(bufferedImage);
+                    BufferedImage filter = ImageService.filter(bufferedImage, task.getType());
                     BufferedImage resize = ImageService.resize(filter, task.getWidthPrev(), task.getHeightPrev());
                     byte[] bytes = ImageService.toByteArray(filter, task.getImageContentType());
                     task.setState(TaskState.DONE);

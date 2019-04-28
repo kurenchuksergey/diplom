@@ -17,18 +17,19 @@ public class UserService {
     @Autowired
     private UserIdentRepository userIdentRepository;
 
-    public UserIdentRepository getRepository(){
+    public UserIdentRepository getRepository() {
         return this.userIdentRepository;
     }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public UserIdent save(UserIdent userIdent){
+    public UserIdent save(UserIdent userIdent) {
         return userIdentRepository.saveAndFlush(userIdent);
     }
 
-    public UserIdent getCurUser(){
+    public UserIdent getCurUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        if(principal instanceof UserIdent){
+        if (principal instanceof UserIdent) {
             return (UserIdent) principal;
         }
         return null;
