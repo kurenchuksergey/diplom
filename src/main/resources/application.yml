@@ -44,6 +44,7 @@ spring:
         healthCheckInterval: 15s
         instanceId: ${spring.application.name}:${random.int}
         service-name: ${spring.application.name}
+        hostname: kurenchuk.cc
 
 security:
   oauth2:
