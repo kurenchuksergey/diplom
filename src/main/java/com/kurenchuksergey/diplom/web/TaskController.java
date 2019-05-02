@@ -2,6 +2,7 @@ package com.kurenchuksergey.diplom.web;
 
 import com.kurenchuksergey.diplom.config.manager.TaskManagerOutChannelConfiguration;
 import com.kurenchuksergey.diplom.entity.Task;
+import com.kurenchuksergey.diplom.entity.TaskState;
 import com.kurenchuksergey.diplom.entity.TaskType;
 import com.kurenchuksergey.diplom.repository.TaskRepository;
 import com.kurenchuksergey.diplom.service.UserService;
@@ -38,13 +39,14 @@ public class TaskController {
         task.setFileName(file.getOriginalFilename());
         task.setImageContentType(file.getContentType());
         task.setImage(file.getBytes());
+        task.setState(TaskState.WAIT);
         task.setUserId(userService.getCurUser().getId());
         task.setType(TaskType.valueOf(type));
         task = taskRepository.save(task);
         if (task.getId() == null) {
             return HttpStatus.BAD_GATEWAY;
         }
-        taskGateway.sendToRabbit(task);
+//        Task task1 = taskGateway.sendToRabbit(task);
         return HttpStatus.OK;
     }
 

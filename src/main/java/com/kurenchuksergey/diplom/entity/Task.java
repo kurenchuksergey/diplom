@@ -26,10 +26,10 @@ public class Task extends EntityParent {
     private String imageContentType;
 
     @Transient
-    private final int widthPrev = 240;
+    public static final int widthPrev = 240;
 
     @Transient
-    private final int heightPrev = 240;
+    public static final int heightPrev = 240;
 
     @Column(name = "user_id")
     private Long userId;

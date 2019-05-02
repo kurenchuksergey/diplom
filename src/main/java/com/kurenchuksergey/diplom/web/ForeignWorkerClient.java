@@ -17,4 +17,7 @@ public interface ForeignWorkerClient {
 
     @RequestMapping(method = RequestMethod.PUT, path = "task/{id}")
     Task updateTask(@PathVariable("id") long id, @RequestBody Task task);
+
+    @RequestMapping(method = RequestMethod.GET, path = "task/{id}/image")
+    byte[] getImageByTaskId(@PathVariable("id") long id);
 }

@@ -71,12 +71,22 @@ public class RabbitConfiguration {
     }
 
     @Bean
+    Queue errorQueue() {
+        return new Queue(Channel.TASK_ERROR.toString(), false);
+    }
+
+    @Bean
     DirectExchange directExchange() {
         return new DirectExchange(taskExchange);
     }
 
     @Bean
-    Binding bind(Queue queue, DirectExchange directExchange) {
+    Binding bind(@Qualifier("queue") Queue queue, DirectExchange directExchange) {
+        return BindingBuilder.bind(queue).to(directExchange).withQueueName();
+    }
+
+    @Bean
+    Binding bindErrorChannel(@Qualifier("errorQueue") Queue queue, DirectExchange directExchange) {
         return BindingBuilder.bind(queue).to(directExchange).withQueueName();
     }
 }
