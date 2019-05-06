@@ -60,7 +60,7 @@ public class TaskManagerOutChannelConfiguration {
 
     @Bean
     @InboundChannelAdapter(channel = "jpaInputChannel",
-            poller = @Poller(fixedDelay = "5000"))
+            poller = @Poller(fixedDelay = "100", maxMessagesPerPoll = "20"))
     public MessageSource<?> jpaInbound() {
         return new JpaPollingChannelAdapter(jpaExecutor());
     }
